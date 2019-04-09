@@ -104,38 +104,69 @@ input[type="radio"] {
 button {
 	color: #fff;
 	padding: .55em 1.25em;
-	background: #22627e;
+	background: #22627e; /*aquamarine*/
 	margin: 1.25em 0 .5em;
 	cursor: pointer;
 }
 
 button:hover {
-	background: #184c62;
+	background: #184c62; /*drk aquamarine*/
+}
+
+.disabled {
+  color: gray;
 }
 
 /* =================================
   ToolTip Styles
 ==================================== */
 
+/*------General Tooltip Styling---*/
 .tipText,
-.tipTextCard {
-  background: #184c62; /*drk teal*/
+.tipTextCard,
+.tipTextAct {
+  background: #800000; /*maroon*/
   color: #fff; /*white*/
+  border: .5px solid #ffffe6; /*cream*/
+  border-left: none;
   padding: 10px 15px;
   border-radius: 6px;
   text-align: center;
-  width: 160px;
+  width: 150px;
   min-height: 1em;
   font-size: .8rem;
   z-index: 1;
 
   position: absolute;
   left: 100%;
-  visibility:hidden;
+  visibility: hidden;
 }
 
+
+.tooltip {
+  display: inline;
+  position: relative;
+}
+
+.tipTextAct {
+  top: -50px;
+  left: 210px;
+}
+
+.tooltip .tipTextCard{
+ top: -10px;
+ left: 60%;
+}
+
+.tooltip .tipText {
+  top: -15px;
+  left: 60%;
+}
+
+/*------Arrow Pointing Left---*/
 .tooltip .tipText::after,
-.tooltip .tipTextCard::after {
+.tooltip .tipTextCard::after,
+.tooltip .tipTextAct::after {
   content: " ";
   position: absolute;
   top: 50%;
@@ -144,29 +175,33 @@ button:hover {
   border-width: 10px;
   border-style: solid;
   border-color: transparent;
-  border-right-color: #184c62; /*drk teal*/
+  border-right-color: #800000; /*maroon*/
   background: transparent;
 }
 
-.tooltip .tipTextCard::after {
+.tooltip .tipTextCard::after,
+.tooltip .tipTextAct::after {
   border-width: 8px;
   margin-top: -6px;
 }
-.tooltip .tipTextCard{
- top: 30px;
- right: 100%;
-}
 
-.tooltip {
-  display: inline;
-  position: relative;
+.message {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  left: 10%;
+  width: 80%;
+  height: 150px;
+  text-align: center;
+  padding: 20px;
+  padding-top: 40px;
+  border-radius: 5px;
+  border: 10px double #fff;
+  margin: auto 0;
+  color: #fff;
+  background: #22627e; /*aquamarine*/
+  z-index: 1000;
 }
-
-.tooltip .tipText {
-  top: -15px;
-  right: 100%;
-}
-
 
 
 /* =================================
@@ -234,4 +269,29 @@ button:hover {
 	.col-6 {
 		width: 49%;
 	}
+  .tooltip .tipTextCard{
+    top: -40%;
+    left: 50%;
+    margin-left: -60px;
+  }
+
+  /*------Arrow Pointing Down---*/
+  .tooltip .tipTextCard::after {
+    bottom: 105%;
+    left: 50%;
+    margin-top: 17px;
+    border-right-color: transparent;
+    border-top-color: #800000; /*maroon*/
+  }
+
+  .tooltip .tipText {
+    top: -15px;
+    left: 80%;
+  }
+  .message {
+    top: 10px;
+    left: 50%;
+    left: 25%;
+    width: 50%;
+  }
 }

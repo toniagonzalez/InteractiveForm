@@ -22,7 +22,7 @@
         <div class="tooltip">
           <label for="name">Name:</label>
           <input type="text" id="name" name="user_name">
-          <span class="tipText">Enter Your First and Last Name</span>
+          <span class="tipText">Name Field Required</span>
         </div>
         <div class="tooltip">
         <label for="mail">Email:</label>
@@ -38,6 +38,8 @@
           <option value="student">Student</option>
           <option value="other">Other</option>
         </select>
+        <label for="otherRole">Enter Other Role:</label>
+        <input type="text" id="otherRole" name="otherRole">
       </fieldset>
 
       <fieldset class="shirt">
@@ -76,7 +78,10 @@
       </fieldset>
 
       <fieldset class="activities">
-        <legend>Register for Activities</legend>
+        <div class="tooltip">
+          <legend>Register for Activities</legend>
+          <span class="tipTextAct">Select Activities</span>
+        </div>
         <label><input type="checkbox" name="all"> Main Conference — $200</label>
         <label><input type="checkbox" name="js-frameworks"> JavaScript Frameworks Workshop — Tuesday 9am-12pm, $100</label>
         <label><input type="checkbox" name="js-libs"> JavaScript Libraries Workshop — Tuesday 1pm-4pm, $100</label>
@@ -84,8 +89,8 @@
         <label><input type="checkbox" name="node"> Node.js Workshop — Tuesday 1pm-4pm, $100</label>
         <label><input type="checkbox" name="build-tools"> Build tools Workshop — Wednesday 9am-12pm, $100</label>
         <label><input type="checkbox" name="npm"> npm Workshop — Wednesday 1pm-4pm, $100</label>
-
       </fieldset>
+
       <fieldset>
         <legend>Payment Info</legend>
 
