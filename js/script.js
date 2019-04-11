@@ -76,18 +76,18 @@ function isEmailValid() {
 
 //---Are Checkbox unchecked?
 function isboxChecked() {
- let checked = 0;
- for (let i=0; i< activitiesCheckbox.length; i++){
-   if (activitiesCheckbox[i].checked){
-     checked += 1;
-   }
- }
- if (checked === 0){
-   return 'fail';
- }
- else{
-   return 'pass';
- }
+  let checked = 0;
+  for (let i=0; i< activitiesCheckbox.length; i++){
+    if (activitiesCheckbox[i].checked){
+      checked += 1;
+    }
+  }
+  if (checked === 0){
+    return 'fail';
+  }
+  else{
+    return 'pass';
+  }
 }
 
 
@@ -95,8 +95,14 @@ function isboxChecked() {
 function isCardValid() {
   let cardValue = creditCard.val();
   let regex = /^\d{13,16}$/.test(cardValue);
+  let lettersOrSymbols = /[-,.]|[a-z]/ig.test(cardValue);
   if (regex === false){
-    return 'fail';
+    if (lettersOrSymbols === true){
+      return 'failSymbol';
+    }
+    if (lettersOrSymbols === false) {
+      return 'fail';
+    }
   }
   else {
     return 'pass';
@@ -108,6 +114,7 @@ function isCardValid() {
 function isZipCodeValid() {
   let zipCodeValue = zipCode.val();
   let regex = /^\d{5}$/.test(zipCodeValue);
+  let lettersOrSymbols = /[-,.]|[a-z]/ig.test(zipCodeValue);
   if (regex === false){
     return 'fail';
   }
@@ -121,6 +128,7 @@ function isZipCodeValid() {
 function isCvvValid() {
   let cvvValue = cvv.val();
   let regex = /^\d{3}$/.test(cvvValue);
+  let lettersOrSymbols = /[-,.]|[a-z]/ig.test(cvvValue);
   if (regex === false){
     return 'fail';
   }
@@ -129,27 +137,18 @@ function isCvvValid() {
   }
 }
 
-//---Tuesday Morning?
-function isTuesdayMorning(string) {
-  let tuesMorning = /tuesday\s?\d\w\w-\d\d/gmi.test(string);
-  if (tuesMorning){
-    return true;
-  }
-  else {
-    return false;
+//--Disable Conflicting Workshop
+function disableConflictWorkshop(workshop1, workshop2) {
+
+  if (workshop1.checked === true){
+    workshop2.parentNode.classList.add('disabled');
+    workshop2.disabled = true;
+  } else {
+    workshop2.parentNode.classList.remove('disabled');
+    workshop2.disabled = false;
   }
 }
 
-//---Tuesday Afternoon?
-function isTuesdayAfternoon(string) {
-  let tuesAfternoon = /tuesday\s?\d\w\w-\dp/gmi.test(string);
-  if (tuesAfternoon){
-    return true;
-  }
-  else {
-    return false;
-  }
-}
 
 
 //-----------Show/Hide Validator---------------//
@@ -158,11 +157,33 @@ function showHideToolTip(result, element) {
   if (result === 'fail'){
     element.css('visibility', 'visible');
     return false;
-  }else if ('pass') {
+  }
+  else{
     element.css('visibility', 'hidden');
     return true;
   }
 }
+
+
+//-----------Show/Hide Validator Credit Card---------------//
+function showHideToolTipCard(result, element) {
+
+  if (result === 'fail'){
+    element.text('Must be 13-16 digits');
+    element.css('visibility', 'visible');
+    return false;
+  }
+  if (result === 'failSymbol'){
+    element.text('No Letters, Dashes or Symbols');
+    element.css('visibility', 'visible');
+    return false;
+  }
+  else{
+    element.css('visibility', 'hidden');
+    return true;
+  }
+}
+
 
 //---Call Activities Validator on Mouseover
 $('.activities').on('mouseover', ()=> {
@@ -172,7 +193,11 @@ $('.activities').on('mouseover', ()=> {
 //---Input Validator on Input
 function inputValidator(regexName) {
   return e => {
-    showHideToolTip(regexName(e), $(e.target).next());
+    if (regexName === isCardValid){
+      showHideToolTipCard(regexName(e), $(e.target).next());
+    } else {
+      showHideToolTip(regexName(e), $(e.target).next());
+    }
   };
 }
 
@@ -194,7 +219,7 @@ function submitValidatorWithCard(){
   }
 }
 
-//----Validator on Submit
+//----Validator on Submit Paypal & Bitcoin
 function submitValidator(){
   let results = [];
   results.push(showHideToolTip(isNameEntered(), name.next()));
@@ -210,8 +235,6 @@ function submitValidator(){
 }
 
 
-
-
 //--------------------------Interactivity---------------------------//
 
 //---Input Event Listeners
@@ -219,7 +242,7 @@ name.on('input', inputValidator(isNameEntered));
 email.on('input', inputValidator(isEmailValid));
 zipCode.on('keyup', inputValidator(isZipCodeValid));
 cvv.on('keyup', inputValidator(isCvvValid));
-creditCard.on('input', inputValidator(isCardValid));
+creditCard.on('keyup', inputValidator(isCardValid));
 
 
 //---On Selecting Other Job Roll Show Input
@@ -282,58 +305,48 @@ $('.activities label').on('change', (e) => {
 let total = [];
 let sum = 0;
 let checkedTally = 0;
-//---Variables for Conflicts
-let text;
-let selectedlabel = e.target.parentNode;
-let selectedbox = e.target;
-let selectedText = selectedlabel.innerText;
 
 
+
+  //----------Disable Conflicting Times--------//
  for (let i=0; i< activitiesCheckbox.length; i++){
-   //---Variables
-   text = activitiesCheckbox[i].parentNode.innerText;
-   let box = activitiesCheckbox[i];
-   let label = box.parentNode;
-   let checked = box.checked;
+   //---Variables for Conflicts
+   let tuesAMJS = activitiesCheckbox[1];
+   let tuesAMExpress = activitiesCheckbox[3];
+   let tuesPMJS = activitiesCheckbox[2];
+   let tuesPMNode = activitiesCheckbox[4];
 
-     //----------Disable Conflicting Times--------//
-    if ((isTuesdayMorning(selectedText) === true) && (isTuesdayMorning(text) === true)) {
-      for (let i=0; i < text.length; i++ ){
-        label.classList.add('disabled');
-        box.disabled = true;
-        if (checked === true) {
-        label.classList.remove('disabled');
-        box.disabled = false;
-        }
-      }
-    }
+   //---Disable Remaining Tuesday Workshop if one is selected
+   if (e.target === tuesAMJS) {
+      disableConflictWorkshop(tuesAMJS,tuesAMExpress);
+   }
+   if (e.target === tuesAMExpress) {
+     disableConflictWorkshop(tuesAMExpress,tuesAMJS);
+   }
+   //---Disable Remaining Wednesday Workshop if one is selected
+   if (e.target === tuesPMJS) {
+     disableConflictWorkshop(tuesPMJS,tuesPMNode);
+   }
+   if (e.target === tuesPMNode) {
+     disableConflictWorkshop(tuesPMNode,tuesPMJS);
+   }
 
-    if ((isTuesdayAfternoon(selectedText) === true) && (isTuesdayAfternoon(text) === true)) {
-      for (let i=0; i < text.length; i++ ){
-        label.classList.add('disabled');
-        box.disabled = true;
-        if (checked === true) {
-        label.classList.remove('disabled');
-        box.disabled = false;
-        }
-      }
-    }
 
   //Get Price from Text & Create Total Array & get Sum
-    if (checked){
-      let price = parseInt(text.substr(-3, 3));
-      total.push(price);
-      sum = total.reduce((x, y)=> x + y, 0);
-      finalTotal.text(`Total: $${sum}`);
-      checkedTally += 1;
-    }
-    if (checkedTally === 0) {
-      sum = 0;
-      finalTotal.text(`Total: $${sum}`);
-      label.classList.remove('disabled');
-      box.disabled = false;
-    }
+  let checked = activitiesCheckbox[i].checked;
+  let text = activitiesCheckbox[i].parentNode.innerText;
+  if (checked){
+    let price = parseInt(text.substr(-3, 3));
+    total.push(price);
+    sum = total.reduce((x, y)=> x + y, 0);
+    finalTotal.text(`Total: $${sum}`);
+    checkedTally += 1;
   }
+  if (checkedTally === 0) {
+    sum = 0;
+    finalTotal.text(`Total: $${sum}`);
+  }
+}
 
 });
 
