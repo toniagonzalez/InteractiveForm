@@ -144,24 +144,23 @@ button:hover {
 
 
 .tooltip {
-  display: inline;
+  /* display: inline; */
+  display: block;
   position: relative;
 }
 
 .tipTextAct {
-  top: -50px;
+  top: 10px;
   left: 210px;
 }
 
-.tooltip .tipTextCard{
- top: -10px;
- left: 60%;
+.tooltip .tipTextCard,
+.tooltip .tipText {
+ top: 30px;
+ left: 65%;
 }
 
-.tooltip .tipText {
-  top: -15px;
-  left: 60%;
-}
+
 
 /*------Arrow Pointing Left---*/
 .tooltip .tipText::after,
@@ -269,6 +268,10 @@ button:hover {
 	.col-6 {
 		width: 49%;
 	}
+  .tooltip .tipText {
+   top: 30px;
+   left: 75%;
+  }
   .tooltip .tipTextCard{
     top: -40%;
     left: 50%;
@@ -284,14 +287,17 @@ button:hover {
     border-top-color: #800000; /*maroon*/
   }
 
-  .tooltip .tipText {
-    top: -15px;
-    left: 80%;
-  }
   .message {
     top: 10px;
     left: 50%;
     left: 25%;
     width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tooltip .tipText  {
+    top: 30px;
+    left: 100%;
   }
 }
